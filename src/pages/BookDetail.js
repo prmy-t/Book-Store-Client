@@ -25,7 +25,7 @@ export default function BookDetail() {
 
   if (book && error) {
     return (
-      <Container className="mt-5">
+      <Container className="my-5">
         <Row className="justify-content-center">
           <Col lg="10" md="10" sm="10" xs="12">
             <Alert variant="danger" className="text-center p-4 h5" show={error}>

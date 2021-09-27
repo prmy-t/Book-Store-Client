@@ -15,7 +15,14 @@ export async function getNavbarData() {
     return { categories, authors };
   }
 }
-
+export async function booksByCategory(category) {
+  return await axios.get(
+    `http://localhost:3000/category/?category=${category}`
+  );
+}
+export async function booksByAuthor(author) {
+  return await axios.get(`http://localhost:3000/author/?author=${author}`);
+}
 export async function getSingleBook(bookId) {
   return await axios.get(`http://localhost:3000/?bookId=${bookId}`);
 }

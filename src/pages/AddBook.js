@@ -30,7 +30,7 @@ export default function AddBook() {
     }
   };
   return (
-    <Container className="mt-5">
+    <Container className="my-5">
       <Row className="justify-content-center">
         <Col lg="6" md="6" sm="6" xs="12">
           <Card bg="light" className="p-2">

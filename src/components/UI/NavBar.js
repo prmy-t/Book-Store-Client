@@ -6,6 +6,7 @@ import { FaPlus, FaBook, FaUserAlt } from "react-icons/fa";
 import { useEffect } from "react";
 import { getNavbarData } from "../../api/get";
 import { useHistory } from "react-router";
+import backpack from "../../assets/backpack.png";
 export default function NavBar() {
   const history = useHistory();
   const [categories, setCategories] = useState([]);
@@ -22,11 +23,11 @@ export default function NavBar() {
   }, []);
 
   const selectCategory = (category) => {
-    history.push(`/books/${category}`);
+    history.push(`/category/${category}`);
   };
   const selectAuthor = (author) => {
     author = author.split(" ").join("-");
-    history.push(`/authors/${author}`);
+    history.push(`/author/${author}`);
   };
   const [showBooks, setShowBooks] = useState(false);
   const [showAuthors, setShowAuthors] = useState(false);
@@ -36,6 +37,13 @@ export default function NavBar() {
       <Container>
         <LinkContainer to="/">
           <Navbar.Brand>
+            <img
+              src={backpack}
+              width="30"
+              height="30"
+              className="d-inline-block align-top"
+              alt="React Bootstrap logo"
+            />
             <b>Book</b>Pack
           </Navbar.Brand>
         </LinkContainer>

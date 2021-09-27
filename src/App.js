@@ -7,6 +7,9 @@ import NavBar from "./components/UI/NavBar";
 import Home from "./pages/Home";
 import AddBook from "./pages/AddBook";
 import BookDetail from "./pages/BookDetail";
+import AnAuthor from "./pages/AnAuthor";
+import Acategory from "./pages/Acategory";
+import Footer from "./components/UI/Footer";
 
 function App() {
   const location = useLocation();
@@ -27,7 +30,14 @@ function App() {
         <Route path="/:bookId" exact>
           <BookDetail />
         </Route>
+        <Route path="/category/:cat" exact>
+          <Acategory />
+        </Route>
+        <Route path="/author/:auth" exact>
+          <AnAuthor />
+        </Route>
       </Switch>
+      <Footer />
     </Container>
   );
 }
