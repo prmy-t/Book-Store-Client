@@ -6,23 +6,29 @@ import NavBar from "./components/UI/NavBar";
 //Page_imports
 import Home from "./pages/Home";
 import AddBook from "./pages/AddBook";
+import BookDetail from "./pages/BookDetail";
 
 function App() {
   const location = useLocation();
+
   return (
-    <>
-      <Container>
-        <NavBar />
-        <Switch location={location} key={location.key}>
-          <Route path="/" exact>
-            <Home />
-          </Route>
-          <Route path="/add-book" exact>
-            <AddBook />
-          </Route>
-        </Switch>
-      </Container>
-    </>
+    <Container>
+      <NavBar />
+      <Switch location={location} key={location.key}>
+        <Route path="/" exact>
+          <Home />
+        </Route>
+        <Route path="/add-book" exact>
+          <AddBook />
+        </Route>
+        <Route path="/add-book" exact>
+          <AddBook />
+        </Route>
+        <Route path="/:bookId" exact>
+          <BookDetail />
+        </Route>
+      </Switch>
+    </Container>
   );
 }
 

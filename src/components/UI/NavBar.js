@@ -3,11 +3,36 @@ import "./NavBar";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { FaPlus, FaBook, FaUserAlt } from "react-icons/fa";
+import { useEffect } from "react";
+import { getNavbarData } from "../../api/get";
+import { useHistory } from "react-router";
 export default function NavBar() {
+  const history = useHistory();
+  const [categories, setCategories] = useState([]);
+  const [authors, setAuthors] = useState([]);
+  useEffect(() => {
+    const call = async () => {
+      const data = await getNavbarData();
+      if (data !== "error") {
+        setCategories(data.categories);
+        setAuthors(data.authors);
+      }
+    };
+    call();
+  }, []);
+
+  const selectCategory = (category) => {
+    history.push(`/books/${category}`);
+  };
+  const selectAuthor = (author) => {
+    author = author.split(" ").join("-");
+    history.push(`/authors/${author}`);
+  };
   const [showBooks, setShowBooks] = useState(false);
   const [showAuthors, setShowAuthors] = useState(false);
+
   return (
-    <Navbar fixed="top" expand="lg" bg="light">
+    <Navbar sticky="top" expand="lg" bg="light">
       <Container>
         <LinkContainer to="/">
           <Navbar.Brand>
@@ -28,11 +53,16 @@ export default function NavBar() {
               onMouseEnter={() => setShowBooks(true)}
               onMouseLeave={() => setShowBooks(false)}
             >
-              <NavDropdown.Item className="my-1">Fiction</NavDropdown.Item>
-              <NavDropdown.Item className="my-1">Non-Fiction</NavDropdown.Item>
-              <NavDropdown.Item className="my-1">Biography</NavDropdown.Item>
-              <NavDropdown.Item className="my-1">Spiritual</NavDropdown.Item>
-              <NavDropdown.Item className="my-1">Classics</NavDropdown.Item>
+              {categories &&
+                categories.map((category) => (
+                  <NavDropdown.Item
+                    key={category}
+                    onClick={() => selectCategory(category)}
+                    className="my-1"
+                  >
+                    {category}
+                  </NavDropdown.Item>
+                ))}
             </NavDropdown>
             <NavDropdown
               title={
@@ -45,17 +75,16 @@ export default function NavBar() {
               onMouseEnter={() => setShowAuthors(true)}
               onMouseLeave={() => setShowAuthors(false)}
             >
-              <NavDropdown.Item className="my-1">
-                Haruki Murakami
-              </NavDropdown.Item>
-              <NavDropdown.Item className="my-1">
-                Kanaiyalal Munshi
-              </NavDropdown.Item>
-              <NavDropdown.Item className="my-1">
-                Hanrindra Dave
-              </NavDropdown.Item>
-              <NavDropdown.Item className="my-1">Dinkar Joshi</NavDropdown.Item>
-              <NavDropdown.Item className="my-1">Jules Vern</NavDropdown.Item>
+              {authors &&
+                authors.map((author) => (
+                  <NavDropdown.Item
+                    className="my-1"
+                    key={author}
+                    onClick={() => selectAuthor(author)}
+                  >
+                    {author}
+                  </NavDropdown.Item>
+                ))}
             </NavDropdown>
           </Nav>
           <Nav>

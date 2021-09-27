@@ -1,15 +1,19 @@
-import { useEffect } from "react";
-import { Card, Row, Col, Container } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
-
+import { Card, Row, Col, Container, Button } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
 import { fetchAll } from "../store/bookSlice";
+import { useHistory } from "react-router";
+import { useEffect } from "react";
+
 export default function Home() {
-  const books = useSelector((state) => state.books.books);
+  const history = useHistory();
   const dispatch = useDispatch();
+  const books = useSelector((state) => state.books.books);
   useEffect(() => {
     dispatch(fetchAll());
   }, [dispatch]);
-  console.log(books);
+  const detailsHandler = (id) => {
+    history.push(`/${id}`);
+  };
   return (
     <Container className="mt-5 App ">
       <Row className="mb-5">
@@ -35,6 +39,9 @@ export default function Home() {
                   </section>
                   <section className="text-muted">Price: {book.price}</section>
                 </Card.Body>
+                <Button onClick={() => detailsHandler(book._id)}>
+                  Details
+                </Button>
               </Card>
             </Col>
           ))}
