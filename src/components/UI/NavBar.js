@@ -1,14 +1,23 @@
 import { useState } from "react";
-import "./NavBar";
+import { motion } from "framer-motion";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import { FaPlus, FaBook, FaUserAlt } from "react-icons/fa";
+import {
+  FaPlus,
+  FaBook,
+  FaUserAlt,
+  FaShoppingCart,
+  FaUser,
+  FaUserPlus,
+} from "react-icons/fa";
 import { useEffect } from "react";
 import { getNavbarData } from "../../api/get";
 import { useHistory } from "react-router";
 import backpack from "../../assets/backpack.png";
-export default function NavBar() {
+import { useSelector } from "react-redux";
+export default function NavBar(props) {
   const history = useHistory();
+  const cartLength = useSelector((state) => state.cart.items.length);
   const [categories, setCategories] = useState([]);
   const [authors, setAuthors] = useState([]);
   useEffect(() => {
@@ -32,21 +41,35 @@ export default function NavBar() {
   const [showBooks, setShowBooks] = useState(false);
   const [showAuthors, setShowAuthors] = useState(false);
 
+  //motion variants
+  const brand = {
+    hover: {
+      scale: 1.1,
+      transition: {
+        repeat: Infinity,
+        repeatType: "reverse",
+        duration: 0.6,
+      },
+    },
+  };
   return (
     <Navbar sticky="top" expand="lg" bg="light">
       <Container>
-        <LinkContainer to="/">
-          <Navbar.Brand>
-            <img
-              src={backpack}
-              width="30"
-              height="30"
-              className="d-inline-block align-top"
-              alt="React Bootstrap logo"
-            />
-            <b>Book</b>Pack
-          </Navbar.Brand>
-        </LinkContainer>
+        <motion.div variants={brand} whileHover="hover">
+          <img
+            src={backpack}
+            width="30"
+            height="30"
+            className="d-inline-block align-top"
+            alt="React Bootstrap logo"
+          />
+          <LinkContainer to="/">
+            <Navbar.Brand>
+              <b> Book</b>
+              Pack
+            </Navbar.Brand>
+          </LinkContainer>
+        </motion.div>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
@@ -95,14 +118,47 @@ export default function NavBar() {
                 ))}
             </NavDropdown>
           </Nav>
+
           <Nav>
-            <LinkContainer to="add-book">
+            <Nav.Link
+              onClick={() => props.toggleValue(true, "Login")}
+              as={motion.div}
+              whileHover={{ scale: 1.1, cursor: "pointer" }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <FaUser size="15" className="mb-1 mx-1" />
+              Log in
+            </Nav.Link>
+          </Nav>
+          <Nav>
+            <Nav.Link
+              onClick={() => props.toggleValue(true, "Sign Up")}
+              to="/cart"
+              as={motion.div}
+              whileHover={{ scale: 1.1, cursor: "pointer" }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <FaUserPlus color="gray" size="15" className="mb-1 mx-1" />
+              Sign up
+            </Nav.Link>
+          </Nav>
+          {/* 
+          <Nav>
+            <LinkContainer to="/cart">
+              <Nav.Link>
+                <FaShoppingCart size="15" className="mb-1 mx-1" />
+                Cart({cartLength})
+              </Nav.Link>
+            </LinkContainer>
+          </Nav>
+          <Nav>
+            <LinkContainer to="/add-book">
               <Nav.Link>
                 <FaPlus size="15" className="mb-1 mx-1" />
                 Add Book
               </Nav.Link>
             </LinkContainer>
-          </Nav>
+          </Nav> */}
         </Navbar.Collapse>
       </Container>
     </Navbar>

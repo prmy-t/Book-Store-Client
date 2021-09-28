@@ -1,15 +1,25 @@
+// import styles from "./bookstable.module.css";
 import { Card, Button } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import dog from "../../assets/book.jpg";
+import { cartActions } from "../../store/cartSlice";
 
 export default function BooksTable(props) {
   const history = useHistory();
+  const dispatch = useDispatch();
   const detailsHandler = (id) => {
     history.push(`/${id}`);
   };
+  const cartHandler = (book) => {
+    dispatch(cartActions.addToCart(book));
+  };
   return (
     <Card bg="light" className="p-2 my-2" img="left">
-      <div style={{ cursor: "pointer" }} onClick={() => console.log("clicked")}>
+      <div
+        style={{ cursor: "pointer" }}
+        onClick={() => detailsHandler(props.book._id)}
+      >
         <Card.Img src={dog} className="mb-2" />
         <Card.Title>{props.book.title}</Card.Title>
         <Card.Body>
@@ -22,9 +32,9 @@ export default function BooksTable(props) {
       </div>
       <Button
         variant="outline-secondary"
-        onClick={() => detailsHandler(props.book._id)}
+        onClick={() => cartHandler(props.book)}
       >
-        Details
+        Add to cart
       </Button>
     </Card>
   );

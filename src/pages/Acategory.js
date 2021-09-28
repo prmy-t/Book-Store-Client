@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { Row, Col, Container, Alert, Image } from "react-bootstrap";
+import { Row, Col, Container, Alert } from "react-bootstrap";
 import { useHistory, useParams } from "react-router";
 import { booksByCategory } from "../api/get";
 import BooksTable from "../components/UI/BooksTable";
 
-import openBook from "../assets/open-book.jpg";
 export default function Acategory() {
   const history = useHistory();
   let { cat } = useParams();
@@ -14,7 +13,6 @@ export default function Acategory() {
   useEffect(() => {
     const call = async () => {
       const res = await booksByCategory(cat);
-      //   console.log(res);
       if (res.data && res.data.error) setError(res.data.error);
       else {
         setBooks(res.data);
@@ -26,9 +24,6 @@ export default function Acategory() {
     <Container className="my-5">
       {books && !error && (
         <Row>
-          <Col lg="3" md="3" sm="3" xs="12">
-            <Image src={openBook} fluid />
-          </Col>
           <Col lg="9" md="9" sm="9" xs="12" className="text-end">
             <div className="h5 text-bold">{cat}</div>
           </Col>
