@@ -4,6 +4,11 @@ const cartSlice = createSlice({
   name: "cart",
   initialState: { items: [], totalQuantity: 0, totalPrice: 0 },
   reducers: {
+    placeCart(state, { payload }) {
+      state.items = payload.items;
+      state.totalQuantity = payload.totalQuantity;
+      state.totalPrice = payload.totalPrice;
+    },
     addToCart(state, { payload }) {
       let newBook = payload;
       const bookExist = state.items.find((book) => book._id === newBook._id);

@@ -17,7 +17,9 @@ import backpack from "../../assets/backpack.png";
 import { useSelector } from "react-redux";
 export default function NavBar(props) {
   const history = useHistory();
+  const isLoggedIn = useSelector((state) => state.bools.isLoggedIn);
   const cartLength = useSelector((state) => state.cart.items.length);
+
   const [categories, setCategories] = useState([]);
   const [authors, setAuthors] = useState([]);
   useEffect(() => {
@@ -118,47 +120,52 @@ export default function NavBar(props) {
                 ))}
             </NavDropdown>
           </Nav>
-
-          <Nav>
-            <Nav.Link
-              onClick={() => props.toggleValue(true, "Login")}
-              as={motion.div}
-              whileHover={{ scale: 1.1, cursor: "pointer" }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <FaUser size="15" className="mb-1 mx-1" />
-              Log in
-            </Nav.Link>
-          </Nav>
-          <Nav>
-            <Nav.Link
-              onClick={() => props.toggleValue(true, "Sign Up")}
-              to="/cart"
-              as={motion.div}
-              whileHover={{ scale: 1.1, cursor: "pointer" }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <FaUserPlus color="gray" size="15" className="mb-1 mx-1" />
-              Sign up
-            </Nav.Link>
-          </Nav>
-          {/* 
-          <Nav>
-            <LinkContainer to="/cart">
-              <Nav.Link>
-                <FaShoppingCart size="15" className="mb-1 mx-1" />
-                Cart({cartLength})
-              </Nav.Link>
-            </LinkContainer>
-          </Nav>
-          <Nav>
-            <LinkContainer to="/add-book">
-              <Nav.Link>
-                <FaPlus size="15" className="mb-1 mx-1" />
-                Add Book
-              </Nav.Link>
-            </LinkContainer>
-          </Nav> */}
+          {isLoggedIn ? (
+            <>
+              <Nav>
+                <LinkContainer to="/cart">
+                  <Nav.Link>
+                    <FaShoppingCart size="15" className="mb-1 mx-1" />
+                    Cart({cartLength})
+                  </Nav.Link>
+                </LinkContainer>
+              </Nav>
+              <Nav>
+                <LinkContainer to="/add-book">
+                  <Nav.Link>
+                    <FaPlus size="15" className="mb-1 mx-1" />
+                    Add Book
+                  </Nav.Link>
+                </LinkContainer>
+              </Nav>
+            </>
+          ) : (
+            <>
+              <Nav>
+                <Nav.Link
+                  onClick={() => props.toggleValue(true, "Login")}
+                  as={motion.div}
+                  whileHover={{ scale: 1.1, cursor: "pointer" }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <FaUser size="15" className="mb-1 mx-1" />
+                  Log in
+                </Nav.Link>
+              </Nav>
+              <Nav>
+                <Nav.Link
+                  onClick={() => props.toggleValue(true, "Sign Up")}
+                  to="/cart"
+                  as={motion.div}
+                  whileHover={{ scale: 1.1, cursor: "pointer" }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <FaUserPlus color="gray" size="15" className="mb-1 mx-1" />
+                  Sign up
+                </Nav.Link>
+              </Nav>
+            </>
+          )}
         </Navbar.Collapse>
       </Container>
     </Navbar>

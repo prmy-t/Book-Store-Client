@@ -18,15 +18,20 @@ function App() {
   const location = useLocation();
   const [showModal, setShowModel] = useState(false);
   const [modalType, setModalType] = useState("");
+  const [loginError, setLoginError] = useState();
+
   const toggleValue = (value, type) => {
     setShowModel(value);
     setModalType(type);
+    setLoginError(undefined);
   };
   return (
     <Container>
       <NavBar loginModal={showModal} toggleValue={toggleValue} />
       <LoginModal
         onHide={() => toggleValue(false)}
+        loginError={loginError}
+        setLoginError={setLoginError}
         type={modalType}
         show={showModal}
       />
