@@ -18,7 +18,7 @@ import { useSelector } from "react-redux";
 export default function NavBar(props) {
   const history = useHistory();
   const isLoggedIn = useSelector((state) => state.bools.isLoggedIn);
-  const cartLength = useSelector((state) => state.cart.items.length);
+  const cartLength = useSelector((state) => state.user.cart.items.length);
 
   const [categories, setCategories] = useState([]);
   const [authors, setAuthors] = useState([]);
@@ -123,7 +123,12 @@ export default function NavBar(props) {
           {isLoggedIn ? (
             <>
               <Nav>
-                <LinkContainer to="/cart">
+                <LinkContainer
+                  to="/cart"
+                  as={motion.div}
+                  whileHover={{ scale: 1.1, cursor: "pointer" }}
+                  whileTap={{ scale: 0.9 }}
+                >
                   <Nav.Link>
                     <FaShoppingCart size="15" className="mb-1 mx-1" />
                     Cart({cartLength})
@@ -131,7 +136,12 @@ export default function NavBar(props) {
                 </LinkContainer>
               </Nav>
               <Nav>
-                <LinkContainer to="/add-book">
+                <LinkContainer
+                  to="/add-book"
+                  as={motion.div}
+                  whileHover={{ scale: 1.1, cursor: "pointer" }}
+                  whileTap={{ scale: 0.9 }}
+                >
                   <Nav.Link>
                     <FaPlus size="15" className="mb-1 mx-1" />
                     Add Book

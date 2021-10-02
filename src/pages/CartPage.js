@@ -2,18 +2,27 @@ import { Button, Container, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import styles from "./cartPage.module.css";
-import { cartActions } from "../store/cartSlice";
-
+import { addItem, userActions } from "../store/userSlice";
+import { useCookies } from "react-cookie";
 export default function CartPage() {
   const dispatch = useDispatch();
-  const items = useSelector((state) => state.cart.items);
-  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
-  const totalPrice = useSelector((state) => state.cart.totalPrice);
-  const increaseQuantity = (id) => {
-    dispatch(cartActions.addItemById(id));
+  const [, setCookies] = useCookies();
+  const items = useSelector((state) => state.user.cart.items);
+  const totalQuantity = useSelector((state) => state.user.cart.totalQuantity);
+  const totalPrice = useSelector((state) => state.user.cart.totalPrice);
+  const increaseQuantity = async (id) => {
+    dispatch(userActions.addItemById(id));
+    const res = await dispatch(addItem());
+    let user = res.payload.data;
+
+    setCookies("user", user);
   };
-  const decreaseQuantity = (id) => {
-    dispatch(cartActions.removeItemById(id));
+  const decreaseQuantity = async (id) => {
+    dispatch(userActions.removeItemById(id));
+    const res = await dispatch(addItem());
+    let user = res.payload.data;
+
+    setCookies("user", user);
   };
   return (
     <Container className="my-5">

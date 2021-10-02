@@ -8,15 +8,18 @@ import {
   Modal,
   Row,
 } from "react-bootstrap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 import { useDispatch } from "react-redux";
 import { FaUser, FaKey } from "react-icons/fa";
 import { signUp, login } from "../../api/post";
-import { cartActions } from "../../store/cartSlice";
+import { userActions } from "../../store/userSlice";
 import { boolsAction } from "../../store/bools";
+import axios from "axios";
 
 export default function LoginModal(props) {
   const dispatch = useDispatch();
+  const [cookies, setCookies] = useCookies();
   const [fname, setFname] = useState();
   const [lname, setLname] = useState();
   const [email, setEmail] = useState();
@@ -39,13 +42,18 @@ export default function LoginModal(props) {
     e.preventDefault();
     if (props.type === "Sign Up") {
       const res = await signUp({ fname, lname, email, password });
-      console.log(res.data);
     }
     if (props.type === "Login") {
       const res = await login({ fname, lname, email, password });
+
       if (res.data.error) props.setLoginError("Email or password is wrong!");
       else {
-        dispatch(cartActions.placeCart(res.data.user.cart));
+        setCookies("user", res.data.user, { path: "/" });
+
+        setCookies("token", res.data.token, { path: "/" });
+        setCookies("isLoggedIn", true, { path: "/" });
+        axios.defaults.headers.common["Authorization"] = res.data.token;
+        dispatch(userActions.appendUser(res.data.user));
         dispatch(boolsAction.setIsLoggedIn(true));
         props.onHide();
       }

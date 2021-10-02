@@ -26,3 +26,7 @@ export async function booksByAuthor(author) {
 export async function getSingleBook(bookId) {
   return await axios.get(`http://localhost:3000/?bookId=${bookId}`);
 }
+
+export async function reFetchUser(id) {
+  return await axios.get(`http://localhost:3000/refetch-user/?id=${id}`);
+}
