@@ -1,6 +1,14 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Container,
+  Nav,
+  Navbar,
+  NavDropdown,
+  Image,
+} from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import {
   FaPlus,
@@ -9,19 +17,28 @@ import {
   FaShoppingCart,
   FaUser,
   FaUserPlus,
+  FaRegFrown,
 } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { getNavbarData } from "../../api/get";
 import { useHistory } from "react-router";
 import backpack from "../../assets/backpack.png";
 import { useSelector } from "react-redux";
-export default function NavBar(props) {
+import dog from "../../assets/dog.jpg";
+import { useCookies } from "react-cookie";
+
+function NavBar(props) {
   const history = useHistory();
   const isLoggedIn = useSelector((state) => state.bools.isLoggedIn);
   const cartLength = useSelector((state) => state.user.cart.items.length);
+  const { fname } = useSelector((state) => state.user);
 
   const [categories, setCategories] = useState([]);
   const [authors, setAuthors] = useState([]);
+  const [showBooks, setShowBooks] = useState(false);
+  const [showAuthors, setShowAuthors] = useState(false);
+  const [, , removeCookie] = useCookies();
   useEffect(() => {
     const call = async () => {
       const data = await getNavbarData();
@@ -40,8 +57,13 @@ export default function NavBar(props) {
     author = author.split(" ").join("-");
     history.push(`/author/${author}`);
   };
-  const [showBooks, setShowBooks] = useState(false);
-  const [showAuthors, setShowAuthors] = useState(false);
+
+  const logOutHandler = () => {
+    removeCookie("isLoggedIn");
+    removeCookie("user");
+    removeCookie("token");
+    window.location.reload();
+  };
 
   //motion variants
   const brand = {
@@ -136,17 +158,41 @@ export default function NavBar(props) {
                 </LinkContainer>
               </Nav>
               <Nav>
-                <LinkContainer
-                  to="/add-book"
-                  as={motion.div}
-                  whileHover={{ scale: 1.1, cursor: "pointer" }}
-                  whileTap={{ scale: 0.9 }}
+                {/* <LinkContainer to="/add-book"> */}
+                <NavDropdown
+                  title={
+                    <span>
+                      <Image
+                        className="mx-1"
+                        size="sm"
+                        roundedCircle
+                        width="28px"
+                        height="28px"
+                        src={dog}
+                      />
+                      {fname}
+                    </span>
+                  }
                 >
-                  <Nav.Link>
+                  <NavDropdown.Item as={Link} to="/add-book" className="my-1">
+                    {/* <LinkContainer to="/add-book"> */}
                     <FaPlus size="15" className="mb-1 mx-1" />
                     Add Book
-                  </Nav.Link>
-                </LinkContainer>
+                    {/* </LinkContainer> */}
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    onClick={logOutHandler}
+                    className="my-1 text-danger"
+                  >
+                    <FaRegFrown size="15" className="mb-1 mx-1" />
+                    Log out
+                  </NavDropdown.Item>
+                </NavDropdown>
+
+                {/* <FaPlus size="15" className="mb-1 mx-1" /> */}
+
+                {/* </Nav.Link> */}
+                {/* </LinkContainer> */}
               </Nav>
             </>
           ) : (
@@ -181,3 +227,5 @@ export default function NavBar(props) {
     </Navbar>
   );
 }
+
+export default NavBar;

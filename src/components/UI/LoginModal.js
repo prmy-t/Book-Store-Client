@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FaUser, FaKey } from "react-icons/fa";
 import { signUp, login } from "../../api/post";
 import { userActions } from "../../store/userSlice";
@@ -19,12 +19,12 @@ import axios from "axios";
 
 export default function LoginModal(props) {
   const dispatch = useDispatch();
+  const { show, type, error } = useSelector((state) => state.bools.loginModal);
   const [cookies, setCookies] = useCookies();
   const [fname, setFname] = useState();
   const [lname, setLname] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const error = props.loginError;
 
   const fNameHandler = (e) => {
     setFname(e.target.value);
@@ -40,16 +40,18 @@ export default function LoginModal(props) {
   };
   const formHandler = async (e) => {
     e.preventDefault();
-    if (props.type === "Sign Up") {
+    if (type === "Sign Up") {
       const res = await signUp({ fname, lname, email, password });
     }
-    if (props.type === "Login") {
+    if (type === "Login") {
       const res = await login({ fname, lname, email, password });
 
-      if (res.data.error) props.setLoginError("Email or password is wrong!");
+      if (res.data.error)
+        dispatch(
+          boolsAction.setLoginModalError("username or password is wrong!")
+        );
       else {
         setCookies("user", res.data.user, { path: "/" });
-
         setCookies("token", res.data.token, { path: "/" });
         setCookies("isLoggedIn", true, { path: "/" });
         axios.defaults.headers.common["Authorization"] = res.data.token;
@@ -62,15 +64,13 @@ export default function LoginModal(props) {
   return (
     <Modal
       onHide={props.onHide}
-      show={props.show}
+      show={show}
       size="md"
       dialogClassName={{ height: "200px" }}
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          {props.type}
-        </Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">{type}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {error && (
@@ -141,7 +141,7 @@ export default function LoginModal(props) {
           </Row>
           <Row className="mt-4 justify-content-end">
             <Col lg="3" md="3" sm="3" xs="6">
-              <Button type="submit">{props.type}</Button>
+              <Button type="submit">{type}</Button>
             </Col>
           </Row>
         </Form>

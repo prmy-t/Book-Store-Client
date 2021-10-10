@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import LoginModal from "./components/UI/LoginModal";
 import { useCookies } from "react-cookie";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { boolsAction } from "./store/bools";
 import { reFetchUser } from "./api/get";
 
@@ -24,9 +24,12 @@ function App() {
   const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
-  const [showModal, setShowModel] = useState(false);
-  const [modalType, setModalType] = useState("");
-  const [loginError, setLoginError] = useState();
+  const { show, modalType, modalError } = useSelector(
+    (state) => state.bools.loginModal
+  );
+  // const [showModal, setShowModel] = useState(false);
+  // const [modalType, setModalType] = useState("");
+  // const [loginError, setLoginError] = useState();
   const [cookies] = useCookies();
 
   useEffect(() => {
@@ -44,19 +47,18 @@ function App() {
     } else history.push("/");
   }, [dispatch, history, cookies]);
   const toggleValue = (value, type) => {
-    setShowModel(value);
-    setModalType(type);
-    setLoginError(undefined);
+    dispatch(boolsAction.setLoginModal([value, type, undefined]));
+    // setModalType(type);
+    // setLoginError(undefined);
   };
   return (
     <Container>
-      <NavBar loginModal={showModal} toggleValue={toggleValue} />
+      <NavBar loginModal={show} toggleValue={toggleValue} />
       <LoginModal
         onHide={() => toggleValue(false)}
-        loginError={loginError}
-        setLoginError={setLoginError}
+        loginError={modalError}
         type={modalType}
-        show={showModal}
+        show={show}
       />
       <Switch location={location} key={location.key}>
         <Route path="/" exact>

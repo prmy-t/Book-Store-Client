@@ -3,22 +3,28 @@ import { Card, Button } from "react-bootstrap";
 import { useCookies } from "react-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
+import { boolsAction } from "../../store/bools";
 
 import { addItem, userActions } from "../../store/userSlice";
 
 export default function BooksTable(props) {
   const history = useHistory();
   const dispatch = useDispatch();
-  const [, setCookies] = useCookies();
+  const [cookies, setCookies] = useCookies();
   // const user = useSelector((state) => state.user);
 
   const detailsHandler = (id) => {
     history.push(`/${id}`);
   };
   const cartHandler = async (book) => {
-    dispatch(userActions.addToCart(book));
-    const res = await dispatch(addItem());
-    let user = res.payload.data;
+    let user;
+    if (cookies.isLoggedIn) {
+      dispatch(userActions.addToCart(book));
+      const res = await dispatch(addItem());
+      user = res.payload.data;
+    } else {
+      dispatch(boolsAction.setLoginModal([true, "Login", undefined]));
+    }
 
     setCookies("user", user);
   };
