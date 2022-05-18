@@ -45,6 +45,7 @@ const Login = (props) => {
 
   const formHandler = async (e) => {
     const errors = handleSubmit(e);
+    console.log(errors);
     if (!errors) {
       if (props.type === "Sign Up") {
         const res = await signUp({ ...values });
