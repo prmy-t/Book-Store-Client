@@ -1,7 +1,7 @@
 // import styles from "./bookstable.module.css";
 import { Card, Button } from "react-bootstrap";
 import { useCookies } from "react-cookie";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { boolsAction } from "../../store/bools";
 
@@ -11,7 +11,6 @@ export default function BooksTable(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const [cookies, setCookies] = useCookies();
-  // const user = useSelector((state) => state.user);
 
   const detailsHandler = (id) => {
     history.push(`/${id}`);

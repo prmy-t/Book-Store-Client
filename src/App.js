@@ -12,57 +12,42 @@ import AnAuthor from "./pages/AnAuthor";
 import Acategory from "./pages/Acategory";
 import Footer from "./components/UI/Footer";
 import CartPage from "./pages/CartPage";
-import { useEffect, useState } from "react";
-import LoginModal from "./components/UI/LoginModal";
+import { useEffect } from "react";
+
 import { useCookies } from "react-cookie";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { boolsAction } from "./store/bools";
-import { reFetchUser } from "./api/get";
+import Login from "./pages/Login";
 
 function App() {
   const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
-  const { show, modalType, modalError } = useSelector(
-    (state) => state.bools.loginModal
-  );
-  // const [showModal, setShowModel] = useState(false);
-  // const [modalType, setModalType] = useState("");
-  // const [loginError, setLoginError] = useState();
+
   const [cookies] = useCookies();
 
   useEffect(() => {
     if (cookies.isLoggedIn && cookies.token) {
-      const call = async () => {
-        const res = await reFetchUser(cookies.user._id);
-        if (res.data) {
-          console.log(res.data);
-        }
-      };
       axios.defaults.headers.common["Authorization"] = cookies.token;
       dispatch(userActions.appendUser(cookies.user));
       dispatch(boolsAction.setIsLoggedIn(true));
-      // call();
     } else history.push("/");
   }, [dispatch, history, cookies]);
-  const toggleValue = (value, type) => {
-    dispatch(boolsAction.setLoginModal([value, type, undefined]));
-    // setModalType(type);
-    // setLoginError(undefined);
-  };
+
   return (
     <Container>
-      <NavBar loginModal={show} toggleValue={toggleValue} />
-      <LoginModal
-        onHide={() => toggleValue(false)}
-        loginError={modalError}
-        type={modalType}
-        show={show}
-      />
+      <NavBar />
+
       <Switch location={location} key={location.key}>
         <Route path="/" exact>
           <Home />
+        </Route>
+        <Route path="/login" exact>
+          <Login type="Login" />
+        </Route>
+        <Route path="/sign-up" exact>
+          <Login type="Sign Up" />
         </Route>
         <Route path="/add-book" exact>
           <AddBook />

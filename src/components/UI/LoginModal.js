@@ -8,7 +8,7 @@ import {
   Modal,
   Row,
 } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { FaUser, FaKey } from "react-icons/fa";
@@ -20,7 +20,7 @@ import axios from "axios";
 export default function LoginModal(props) {
   const dispatch = useDispatch();
   const { show, type, error } = useSelector((state) => state.bools.loginModal);
-  const [cookies, setCookies] = useCookies();
+  const [, setCookies] = useCookies();
   const [fname, setFname] = useState();
   const [lname, setLname] = useState();
   const [email, setEmail] = useState();
@@ -42,6 +42,9 @@ export default function LoginModal(props) {
     e.preventDefault();
     if (type === "Sign Up") {
       const res = await signUp({ fname, lname, email, password });
+      if (res.data.error) {
+      }
+      // props.onHide();
     }
     if (type === "Login") {
       const res = await login({ fname, lname, email, password });
@@ -84,7 +87,7 @@ export default function LoginModal(props) {
         )}
 
         <Form onSubmit={formHandler} className="my-5">
-          {props.type === "Sign Up" && (
+          {type === "Sign Up" && (
             <Row className="justify-content-center">
               <Col lg="5" md="5" sm="5" xs="6">
                 <InputGroup>
@@ -132,9 +135,7 @@ export default function LoginModal(props) {
                 <FormControl
                   onChange={passwordHandler}
                   type="password"
-                  placeholder={
-                    props.type === "Login" ? "Password" : "New Password"
-                  }
+                  placeholder={type === "Login" ? "Password" : "New Password"}
                 ></FormControl>
               </InputGroup>
             </Col>

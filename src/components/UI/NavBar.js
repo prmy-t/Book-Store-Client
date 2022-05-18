@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
-  Row,
-  Col,
   Container,
   Nav,
   Navbar,
   NavDropdown,
   Image,
+  Button,
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import {
@@ -16,7 +15,7 @@ import {
   FaUserAlt,
   FaShoppingCart,
   FaUser,
-  FaUserPlus,
+  FaRegUser,
   FaRegFrown,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -56,6 +55,10 @@ function NavBar(props) {
   const selectAuthor = (author) => {
     author = author.split(" ").join("-");
     history.push(`/author/${author}`);
+  };
+
+  const loginHandler = () => {
+    history.push("/login");
   };
 
   const logOutHandler = () => {
@@ -199,7 +202,7 @@ function NavBar(props) {
             <>
               <Nav>
                 <Nav.Link
-                  onClick={() => props.toggleValue(true, "Login")}
+                  onClick={loginHandler}
                   as={motion.div}
                   whileHover={{ scale: 1.1, cursor: "pointer" }}
                   whileTap={{ scale: 0.9 }}
@@ -210,14 +213,16 @@ function NavBar(props) {
               </Nav>
               <Nav>
                 <Nav.Link
-                  onClick={() => props.toggleValue(true, "Sign Up")}
+                  onClick={() => history.push("/sign-up")}
                   to="/cart"
                   as={motion.div}
                   whileHover={{ scale: 1.1, cursor: "pointer" }}
                   whileTap={{ scale: 0.9 }}
                 >
-                  <FaUserPlus color="gray" size="15" className="mb-1 mx-1" />
-                  Sign up
+                  <Button size="sm" variant="outline-secondary">
+                    <FaRegUser size="15" className="mb-1 mx-1" />
+                    Sign up
+                  </Button>
                 </Nav.Link>
               </Nav>
             </>
